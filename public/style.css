@@ -1,0 +1,130 @@
+/* Bảng màu lấy cảm hứng từ thương hiệu IOE: xanh lá đậm + vàng gold, xanh dương cho khu quản trị */
+:root {
+  --ioe-green-dark: #0b3d24;
+  --ioe-green: #0f5132;
+  --ioe-gold: #f6c445;
+  --ioe-gold-dark: #d9a521;
+  --ioe-blue: #004085;
+  --text-dark: #1c2b22;
+  --text-muted: #5b6b62;
+  --bg-light: #f4f7f6;
+  --white: #ffffff;
+  --danger: #dc3545;
+  --danger-dark: #c82333;
+  --success: #28a745;
+  --success-dark: #218838;
+  --info: #17a2b8;
+  --info-dark: #138496;
+  --warning: #ffc107;
+  --radius: 10px;
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+}
+
+a { color: inherit; }
+
+.btn {
+  display: inline-block;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.1s ease, filter 0.15s ease;
+}
+.btn:hover { filter: brightness(0.95); }
+.btn:active { transform: translateY(1px); }
+
+.btn-gold {
+  background: linear-gradient(180deg, var(--ioe-gold) 0%, var(--ioe-gold-dark) 100%);
+  color: var(--ioe-green-dark);
+}
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--white);
+  color: var(--white);
+}
+.btn-primary { background: var(--ioe-blue); color: var(--white); }
+.btn-success { background: var(--success); color: var(--white); }
+.btn-success:hover { background: var(--success-dark); }
+.btn-danger { background: var(--danger); color: var(--white); }
+.btn-danger:hover { background: var(--danger-dark); }
+.btn-info { background: var(--info); color: var(--white); }
+.btn-info:hover { background: var(--info-dark); }
+.btn-secondary { background: #6c757d; color: var(--white); }
+.btn-block { width: 100%; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: var(--text-dark);
+}
+.form-group .hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.form-group .error-text { font-size: 12px; color: var(--danger); margin-top: 4px; display: none; }
+.form-group.has-error input,
+.form-group.has-error select,
+.form-group.has-error textarea { border-color: var(--danger); }
+.form-group.has-error .error-text { display: block; }
+
+input[type="text"], input[type="tel"], input[type="email"], input[type="date"], select, textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1.5px solid #d7ded9;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  background: var(--white);
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--ioe-green);
+  box-shadow: 0 0 0 3px rgba(15, 81, 50, 0.12);
+}
+
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 560px) { .row-2 { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px;
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  display: none;
+}
+.alert.show { display: block; }
+.alert-success { background: #e6f6ec; color: #146c33; border: 1px solid #b7e3c6; }
+.alert-error { background: #fdecea; color: #9c1f22; border: 1px solid #f4b8b8; }
+
+.spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.5);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 8px;
+  vertical-align: -2px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }

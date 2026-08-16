@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tra Cứu Hồ Sơ Dự Thi IOE</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .page-header { background: var(--ioe-green-dark); color: #fff; padding: 22px 20px; text-align: center; }
+    .page-header h1 { margin: 0; font-size: 22px; }
+    .wrap { max-width: 480px; margin: 30px auto 60px; padding: 0 16px; }
+    .result-card { margin-top: 18px; display: none; }
+    .result-card.show { display: block; }
+    .result-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; gap: 12px; }
+    .result-row:last-child { border-bottom: none; }
+    .result-row .label { color: var(--text-muted); white-space: nowrap; }
+    .result-row .value { font-weight: 600; text-align: right; }
+    .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 12.5px; font-weight: 700; color: #fff; }
+    .status-pending { background: var(--warning); color: #856404; }
+    .status-approved { background: var(--success); }
+    .status-rejected { background: var(--danger); }
+  </style>
+</head>
+<body>
+  <div class="page-header"><h1>🔍 Tra Cứu Hồ Sơ Dự Thi IOE</h1></div>
+  <div class="wrap">
+    <div class="card">
+      <div id="alertBox" class="alert"></div>
+      <form id="traCuuForm">
+        <div class="form-group">
+          <label for="ma_thi_sinh">Mã thí sinh</label>
+          <input type="text" id="ma_thi_sinh" name="ma_thi_sinh" placeholder="VD: 109QOHA" required>
+        </div>
+        <div class="form-group">
+          <label for="sdt">Số điện thoại phụ huynh đã đăng ký</label>
+          <input type="tel" id="sdt" name="sdt" placeholder="09xxxxxxxx" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="submitBtn" style="background:var(--ioe-green);">Tra cứu</button>
+      </form>
+
+      <div class="result-card" id="resultCard">
+        <div class="result-row"><span class="label">Mã thí sinh</span><span class="value" id="r_ma_thi_sinh">—</span></div>
+        <div class="result-row"><span class="label">Họ tên thí sinh</span><span class="value" id="r_ho_ten">—</span></div>
+        <div class="result-row"><span class="label">Năm sinh</span><span class="value" id="r_nam_sinh">—</span></div>
+        <div class="result-row"><span class="label">Khối lớp</span><span class="value" id="r_khoi_lop">—</span></div>
+        <div class="result-row"><span class="label">Ngày đăng ký</span><span class="value" id="r_ngay_dang_ky">—</span></div>
+        <div class="result-row"><span class="label">Trạng thái</span><span class="value"><span class="status-pill" id="r_trang_thai">—</span></span></div>
+      </div>
+    </div>
+    <p style="text-align:center; margin-top:16px;"><a href="/" style="color:var(--text-muted); font-size:13px;">← Quay lại trang chủ</a></p>
+  </div>
+
+  <script>
+    var form = document.getElementById('traCuuForm');
+    var alertBox = document.getElementById('alertBox');
+    var resultCard = document.getElementById('resultCard');
+    var submitBtn = document.getElementById('submitBtn');
+
+    var STATUS_LABELS = {
+      pending: ['Chờ duyệt', 'status-pending'],
+      approved: ['Đã duyệt', 'status-approved'],
+      rejected: ['Đã từ chối', 'status-rejected'],
+    };
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      alertBox.className = 'alert';
+      resultCard.classList.remove('show');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner"></span>Đang tra cứu...';
+
+      var maThiSinh = document.getElementById('ma_thi_sinh').value.trim();
+      var sdt = document.getElementById('sdt').value.trim();
+      var qs = new URLSearchParams({ ma_thi_sinh: maThiSinh, sdt: sdt });
+
+      fetch('/api/tra-cuu?' + qs.toString())
+        .then(function (res) { return res.json().then(function (data) { return { status: res.status, data: data }; }); })
+        .then(function (result) {
+          if (result.status === 200 && result.data.ok) {
+            var d = result.data.data;
+            document.getElementById('r_ma_thi_sinh').textContent = d.ma_thi_sinh;
+            document.getElementById('r_ho_ten').textContent = d.ho_ten;
+            document.getElementById('r_nam_sinh').textContent = d.nam_sinh || '—';
+            document.getElementById('r_khoi_lop').textContent = d.khoi_lop;
+            document.getElementById('r_ngay_dang_ky').textContent = new Date(d.ngay_dang_ky).toLocaleString('vi-VN');
+            var pill = document.getElementById('r_trang_thai');
+            var label = STATUS_LABELS[d.trang_thai] || [d.trang_thai, ''];
+            pill.textContent = label[0];
+            pill.className = 'status-pill ' + label[1];
+            resultCard.classList.add('show');
+          } else {
+            alertBox.className = 'alert alert-error show';
+            alertBox.textContent = result.data.error || 'Không tìm thấy hồ sơ.';
+          }
+        })
+        .catch(function () {
+          alertBox.className = 'alert alert-error show';
+          alertBox.textContent = 'Không thể kết nối tới máy chủ. Vui lòng thử lại sau.';
+        })
+        .finally(function () {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Tra cứu';
+        });
+    });
+  </script>
+</body>
+</html>

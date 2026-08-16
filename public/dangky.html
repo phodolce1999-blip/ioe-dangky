@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng Ký Hồ Sơ Dự Thi IOE</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .page-header {
+      background: var(--ioe-green-dark);
+      color: #fff;
+      padding: 22px 20px;
+      text-align: center;
+    }
+    .page-header h1 { margin: 0 0 4px; font-size: 22px; }
+    .page-header p { margin: 0; color: #cfe8da; font-size: 14px; }
+    .wrap { max-width: 640px; margin: 30px auto 60px; padding: 0 16px; }
+
+    /* honeypot ẩn chống bot */
+    .hp-field { position: absolute; left: -9999px; top: -9999px; }
+    .section-title { font-size: 15px; font-weight: 700; color: var(--ioe-green-dark); margin: 22px 0 12px; }
+    .section-title:first-child { margin-top: 0; }
+
+    /* Khối xác nhận đăng ký thành công - mô phỏng đúng phiếu xác nhận của hệ thống IOE */
+    .confirm-box { display: none; }
+    .confirm-box.show { display: block; }
+    .confirm-header {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #eaf3ff; border: 1px solid #cfe2ff; border-radius: 8px;
+      padding: 14px 16px; margin-bottom: 18px;
+    }
+    .confirm-header .icon-circle {
+      flex: none; width: 24px; height: 24px; border-radius: 50%;
+      background: #2b6fd6; color: #fff; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; font-style: italic;
+    }
+    .confirm-title { font-weight: 800; font-size: 15px; color: #1c2b22; line-height: 1.5; }
+    .confirm-section { margin-bottom: 14px; }
+    .confirm-section h3 { font-size: 14px; margin: 0 0 8px; color: #1c2b22; }
+    .confirm-section ul { list-style: none; margin: 0; padding: 0; }
+    .confirm-section li { font-size: 14px; padding: 3px 0; color: #333; }
+    .confirm-section li b { font-weight: 600; }
+    .confirm-divider { border: none; border-top: 1px dashed #ccc; margin: 16px 0; }
+    .confirm-status {
+      text-align: center; font-weight: 700; font-size: 13.5px; color: #b8860b;
+      background: #fff8e6; border: 1px solid #ffe8ad; border-radius: 8px; padding: 12px 14px;
+      margin-bottom: 18px;
+    }
+    .confirm-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <div class="page-header">
+    <h1>📝 Đăng Ký Hồ Sơ Dự Thi IOE</h1>
+    <p>Olympic Tiếng Anh Trên Internet · Năm học 2026 - 2027</p>
+  </div>
+
+  <div class="wrap">
+    <div class="card">
+      <div id="alertBox" class="alert"></div>
+
+      <!-- Trạng thái đăng ký thành công: mô phỏng đúng phiếu xác nhận thật của hệ thống IOE -->
+      <div id="confirmBox" class="confirm-box">
+        <div class="confirm-header">
+          <span class="icon-circle">i</span>
+          <div class="confirm-title">CUỘC THI OLYMPIC TIẾNG ANH TRÊN INTERNET - IOE 2026-2027</div>
+        </div>
+
+        <div class="confirm-section">
+          <h3>I. THÔNG TIN THÍ SINH</h3>
+          <ul>
+            <li>• Mã Thí Sinh : <b id="c_ma_thi_sinh">—</b></li>
+            <li>• Họ Và Tên : <b id="c_ho_ten">—</b></li>
+            <li>• Năm Sinh : <b id="c_nam_sinh">—</b></li>
+            <li>• Khối Lớp : <b id="c_khoi_lop">—</b></li>
+          </ul>
+        </div>
+
+        <div class="confirm-section">
+          <h3>II. THÔNG TIN PHỤ HUYNH</h3>
+          <ul>
+            <li>• Họ Và Tên : <b id="c_ho_ten_ph">—</b></li>
+            <li>• Năm Sinh : <b id="c_nam_sinh_ph">—</b></li>
+            <li>• Số Điện Thoại : <b id="c_sdt_ph">—</b></li>
+            <li>• Nghề Nghiệp : <b id="c_nghe_nghiep">—</b></li>
+            <li>• Địa Chỉ : <b id="c_dia_chi">—</b></li>
+            <li>• Email : <b id="c_email">—</b></li>
+          </ul>
+        </div>
+
+        <hr class="confirm-divider">
+
+        <div class="confirm-status">
+          HỆ THỐNG XÁC NHẬN THÔNG TIN HỒ SƠ ĐÃ CÓ TRÊN HỆ THỐNG TRONG TRẠNG THÁI CHỜ XÉT DUYỆT CHÍNH THỨC
+        </div>
+
+        <div class="confirm-actions">
+          <a href="/tra-cuu.html" class="btn btn-primary" style="background:var(--ioe-green);">Tra cứu hồ sơ</a>
+          <button class="btn btn-secondary" onclick="location.reload()">Đăng ký thêm hồ sơ khác</button>
+        </div>
+      </div>
+
+      <!-- Biểu mẫu đăng ký -->
+      <form id="dangKyForm">
+        <div class="section-title">I. Thông tin thí sinh</div>
+        <div class="form-group">
+          <label for="ho_ten">Họ và tên thí sinh <span style="color:var(--danger)">*</span></label>
+          <input type="text" id="ho_ten" name="ho_ten" placeholder="Nguyễn Văn A" required>
+          <div class="error-text"></div>
+        </div>
+        <div class="row-2">
+          <div class="form-group">
+            <label for="nam_sinh">Năm sinh <span style="color:var(--danger)">*</span></label>
+            <input type="number" id="nam_sinh" name="nam_sinh" placeholder="VD: 2015" min="2005" max="2022" required>
+            <div class="error-text"></div>
+          </div>
+          <div class="form-group">
+            <label for="khoi_lop">Khối lớp <span style="color:var(--danger)">*</span></label>
+            <select id="khoi_lop" name="khoi_lop" required>
+              <option value="">-- Chọn khối lớp --</option>
+            </select>
+            <div class="error-text"></div>
+          </div>
+        </div>
+
+        <div class="section-title">II. Thông tin phụ huynh</div>
+        <div class="row-2">
+          <div class="form-group">
+            <label for="ho_ten_phu_huynh">Họ tên phụ huynh <span style="color:var(--danger)">*</span></label>
+            <input type="text" id="ho_ten_phu_huynh" name="ho_ten_phu_huynh" required>
+            <div class="error-text"></div>
+          </div>
+          <div class="form-group">
+            <label for="nam_sinh_phu_huynh">Năm sinh</label>
+            <input type="number" id="nam_sinh_phu_huynh" name="nam_sinh_phu_huynh" placeholder="VD: 1987" min="1950" max="2010">
+            <div class="error-text"></div>
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="form-group">
+            <label for="sdt_phu_huynh">Số điện thoại <span style="color:var(--danger)">*</span></label>
+            <input type="tel" id="sdt_phu_huynh" name="sdt_phu_huynh" placeholder="09xxxxxxxx" required>
+            <div class="error-text"></div>
+          </div>
+          <div class="form-group">
+            <label for="nghe_nghiep_phu_huynh">Nghề nghiệp</label>
+            <input type="text" id="nghe_nghiep_phu_huynh" name="nghe_nghiep_phu_huynh" placeholder="VD: Nhân viên bán hàng">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="dia_chi">Địa chỉ</label>
+          <input type="text" id="dia_chi" name="dia_chi" placeholder="VD: Phường Thanh Đức, tỉnh Vĩnh Long">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="email@example.com">
+          <div class="error-text"></div>
+        </div>
+        <div class="form-group">
+          <label for="ghi_chu">Ghi chú thêm</label>
+          <textarea id="ghi_chu" name="ghi_chu" rows="2" placeholder="Thông tin khác (nếu có)"></textarea>
+        </div>
+
+        <!-- Honeypot: field này phải luôn để trống, bot tự động sẽ điền vào -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="website">Website</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="submitBtn" style="background:var(--ioe-green); font-size:16px; padding:14px;">
+          Gửi đăng ký
+        </button>
+      </form>
+    </div>
+    <p style="text-align:center; margin-top:16px;"><a href="/" style="color:var(--text-muted); font-size:13px;">← Quay lại trang chủ</a></p>
+  </div>
+
+  <script src="/dangky.js"></script>
+</body>
+</html>

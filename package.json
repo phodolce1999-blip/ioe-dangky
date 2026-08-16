@@ -1,0 +1,15 @@
+{
+  "name": "ioe-dangky",
+  "version": "1.0.0",
+  "description": "Website đăng ký hồ sơ dự thi IOE (Olympic Tiếng Anh trên Internet) kèm trang quản trị xét duyệt. Không cần cài thêm gói ngoài (chỉ dùng Node.js core).",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng Nhập Quản Trị - IOE</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--ioe-blue) 0%, #002752 100%);
+    }
+    .login-card { width: 100%; max-width: 380px; margin: 20px; }
+    .login-card h1 { font-size: 20px; text-align: center; color: var(--ioe-blue); margin-top: 0; }
+    .login-card .sub { text-align: center; color: var(--text-muted); font-size: 13px; margin-bottom: 22px; }
+  </style>
+</head>
+<body>
+  <div class="card login-card">
+    <h1>🔐 Đăng Nhập Quản Trị</h1>
+    <div class="sub">Hệ Thống Quản Trị IOE</div>
+    <div id="alertBox" class="alert"></div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">Tên đăng nhập</label>
+        <input type="text" id="username" name="username" required autofocus>
+      </div>
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" id="submitBtn">Đăng nhập</button>
+    </form>
+  </div>
+
+  <script>
+    var form = document.getElementById('loginForm');
+    var alertBox = document.getElementById('alertBox');
+    var submitBtn = document.getElementById('submitBtn');
+
+    // Nếu đã đăng nhập rồi thì vào thẳng dashboard.
+    fetch('/api/admin/me').then(function (r) { return r.json(); }).then(function (d) {
+      if (d.authenticated) window.location.href = '/admin/index.html';
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      alertBox.className = 'alert';
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner"></span>Đang đăng nhập...';
+
+      fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: document.getElementById('username').value,
+          password: document.getElementById('password').value,
+        }),
+      })
+        .then(function (res) { return res.json().then(function (data) { return { status: res.status, data: data }; }); })
+        .then(function (result) {
+          if (result.status === 200 && result.data.ok) {
+            window.location.href = '/admin/index.html';
+          } else {
+            alertBox.className = 'alert alert-error show';
+            alertBox.textContent = result.data.error || 'Đăng nhập thất bại.';
+          }
+        })
+        .catch(function () {
+          alertBox.className = 'alert alert-error show';
+          alertBox.textContent = 'Không thể kết nối tới máy chủ.';
+        })
+        .finally(function () {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Đăng nhập';
+        });
+    });
+  </script>
+</body>
+</html>
